@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import CustomLayout from './../widgets/CustomLayout';
+import CustomLayout from '../widgets/CustomLayout';
 import { ic_login } from '../../assets/images/ic_login';
-import styles from './Login.styles';
+import styles from './OTPScreen.styles';
 
-const Login = () => {
+const OTPScreen = () => {
 
   const onBackPress = () => {
 
@@ -22,4 +22,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default OTPScreen;
