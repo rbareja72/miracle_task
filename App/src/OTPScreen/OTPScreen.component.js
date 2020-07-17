@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import CustomLayout from '../widgets/CustomLayout';
-import { ic_login } from '../../assets/images/ic_login';
+import { ic_otp } from '../../assets/images/ic_otp';
 import styles from './OTPScreen.styles';
+import OTPField from '../widgets/OTPField';
 
 const OTPScreen = () => {
 
@@ -10,13 +11,17 @@ const OTPScreen = () => {
 
   };
 
+  const onChange = (value) => {
+    console.log('OTP', value);
+  };
+
   return (
     <CustomLayout
-      image={ic_login}
+      image={ic_otp}
       onBackPress={onBackPress}
     >
       <View style={styles.flexStyle}>
-        <Text>haha</Text>
+        <OTPField length={5} onChange={onChange} value={'12345'} />
       </View>
     </CustomLayout>
   );

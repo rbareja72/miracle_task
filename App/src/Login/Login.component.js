@@ -6,14 +6,10 @@ import styles from './Login.styles';
 
 const Login = () => {
 
-  const onBackPress = () => {
-
-  };
-
   return (
     <CustomLayout
       image={ic_login}
-      onBackPress={onBackPress}
+      showBackButton={false}
     >
       <View style={styles.flexStyle}>
         <Text>haha</Text>

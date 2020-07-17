@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: verticalScale(24),
-    marginStart: moderateScale(24),
+    marginStart: moderateScale(16),
   },
   backIcon: {
     width: normalScale(24),
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 6,
     borderTopEndRadius: moderateScale(16),
     borderTopStartRadius: moderateScale(16),
-    marginTop: -verticalScale(8),
+    marginTop: -verticalScale(26),
     backgroundColor: colors.white,
     padding: moderateScale(4),
   },
