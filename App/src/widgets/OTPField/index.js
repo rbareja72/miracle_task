@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import colors from '../../../assets/colors';
 import normalize, { moderateScale } from './../../config/device/normalize';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, keyboardType }) => {
   const refs = [];
@@ -47,7 +46,7 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, key
   };
 
   return (
-    <TouchableWithoutFeedback onPress={onFieldPress}>
+    <Pressable onPress={onFieldPress}>
       <View style={[styles.row, containerStyle]}>
         {
           refs.map((ref, index) => {
@@ -68,7 +67,7 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, key
           })
         }
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
