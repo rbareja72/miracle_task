@@ -18,7 +18,6 @@ const INITIAL_STATE = {
 };
 
 function LoginReducer(state = INITIAL_STATE, action) {
-  console.log(state, action);
   switch (action.type) {
     case actionTypes.LOGIN_UPDATE_VALUE:
       return {
@@ -60,6 +59,15 @@ function LoginReducer(state = INITIAL_STATE, action) {
           ...state,
           isError: true,
           message: action.payload.message,
+        },
+      };
+    case actionTypes.LOGIN_CLEAR_STATE:
+      return {
+        ...state,
+        loginApiState: {
+          isSuccess: false,
+          isError: false,
+          message: '',
         },
       };
     default:

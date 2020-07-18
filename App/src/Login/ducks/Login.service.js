@@ -5,7 +5,7 @@ const loginService = async (email, password) => {
   const storedEmail = await getData('email');
   const storedPassword = await getData('password');
   if (email === storedEmail && storedPassword === password) {
-    return true;
+    return en.LOGIN_SUCCESS;
   } else {
     throw en.INVALID_CRED;
   }

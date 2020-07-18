@@ -18,7 +18,7 @@ const login = (email, password) => dispatch => {
   .then((result) => {
     dispatch({
       type: actionTypes.LOGIN_SUCCESS,
-      payload: { message: en.LOGIN_SUCCESS },
+      payload: { message: result },
     });
   })
   .catch((error) => {
