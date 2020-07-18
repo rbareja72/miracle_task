@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Keyboard } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import colors from '../../../assets/colors';
-import normalize, { moderateScale, verticalScale, normalScale } from './../../config/device/normalize';
+import normalize, { moderateScale } from './../../config/device/normalize';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, keyboardType }) => {
