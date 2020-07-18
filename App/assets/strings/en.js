@@ -17,6 +17,10 @@ const en = {
   ENTER_NEW_PASSWORD: 'Enter New Password',
   NEW_PASSWORD: 'New Password',
   CONFIRM_PASSWORD: 'Confirm Password',
+  LOGIN_SUCCESS: 'Login Successful',
+  PASSWORD_MUST_BE_BETWEEN: 'Password must be between 8 and 32 characters',
+  INVALID_EMAIL: 'Invalid email',
+  INVALID_CRED: 'Invalid Credentials',
 };
 
 export default en;
