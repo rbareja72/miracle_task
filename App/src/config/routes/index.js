@@ -13,9 +13,9 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="OTPScreen" component={OTPScreen} options={{ header }} />
+      <Stack.Navigator initialRouteName={'Login'}>
         <Stack.Screen name="Login" component={Login} options={{ header }} />
+        <Stack.Screen name="OTPScreen" component={OTPScreen} options={{ header }} />
         {/* <Stack.Screen name="ForgetPassoword" component={LoginScreen} />
         <Stack.Screen name="NewPassword" component={LoginScreen} /> */}
       </Stack.Navigator>

@@ -5,12 +5,12 @@ import { ic_otp } from '../../assets/images/ic_otp';
 import styles from './OTPScreen.styles';
 import OTPField from '../widgets/OTPField';
 
-const OTPScreen = () => {
+const OTPScreen = (props) => {
 
   const [otp, setOtp] = useState('');
 
   const onBackPress = () => {
-
+    props.navigation.goBack();
   };
 
   const onChange = (value) => {

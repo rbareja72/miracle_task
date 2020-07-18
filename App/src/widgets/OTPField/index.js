@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
 import colors from '../../../assets/colors';
 import normalize, { moderateScale } from './../../config/device/normalize';
 
-const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, keyboardType }) => {
+const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle }) => {
   const refs = [];
   for (let i = 0; i < length; i++) {
     refs.push(useRef(null));
@@ -17,7 +17,7 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, key
     }
   }, [otp, value]);
 
-  const onKeyPress = (event, ref, index) => {
+  const onKeyPress = (event, index) => {
     if (event.nativeEvent.key === 'Backspace') {
       if (index > 0) {
         refs[index - 1].current.focus();
@@ -29,10 +29,13 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, key
     }
   };
 
-  const onChangeText = (value, ref, index) => {
+  const onChangeText = (value, index) => {
     const left = otp.substr(0, index);
     const right = otp.substr(index + 1);
     const newOtp = left + value + right;
+    if (Platform.OS === 'android' && newOtp.length > otp.length) {
+      onKeyPress({ nativeEvent: { key: value } }, index);
+    }
     setOtp(newOtp);
     onChange(newOtp);
   };
@@ -51,18 +54,18 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, key
         {
           refs.map((ref, index) => {
             return (
-              <TextInput
-                key={'' + index}
-                ref={ref}
-                style={[styles.textInput, textFieldStyle]}
-                maxLength={1}
-                value={otp[index]}
-                onKeyPress={(event) => onKeyPress(event, ref, index)}
-                onChangeText={(value) => onChangeText(value, ref, index)}
-                onSubmitEditing={() => { }}
-                keyboardType={keyboardType || 'number-pad'}
-                pointerEvents={'none'}
-              />
+              <View pointerEvents={'none'} key={'' + index}>
+                <TextInput
+                  ref={ref}
+                  style={[styles.textInput, textFieldStyle]}
+                  maxLength={1}
+                  value={otp[index]}
+                  onKeyPress={(event) => onKeyPress(event, index)}
+                  onChangeText={(value) => onChangeText(value, index)}
+                  onSubmitEditing={() => { }}
+                  keyboardType={'number-pad'}
+                />
+              </View>
             );
           })
         }
