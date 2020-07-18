@@ -1,37 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, ScrollView, Platform } from 'react-native';
 import CustomLayout from './../widgets/CustomLayout';
-import { ic_login } from '../../assets/images/ic_login';
-import styles from './Login.styles';
+import { ic_forget } from '../../assets/images/ic_forget';
+import styles from './ForgotPassword.styles';
 import en from '../../assets/strings/en';
 import FloatingLabelTextField from '../widgets/FloatingLabelTextField';
 import Button from '../widgets/Button';
 import Link from '../widgets/Link';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-const Login = (props) => {
+const ForgotPassword = (props) => {
 
   const emailRef = useRef(null);
-  const passwordRef = useRef(null);
   const [email, setEmail] = useState('name');
-  const onLoginPress = () => {
-
-  };
-
-  const onForgotPasswordPress = () => {
-    props.navigation.navigate('ForgotPassword');
-  };
+  const onSubmitPress = () => props.navigation.navigate('OTPScreen');
+  const onBackPress = () => props.navigation.navigate('Login');
+  const onNeedHelpPress = () => null;
 
   return (
     <CustomLayout
-      image={ic_login}
-      showBackButton={false}
+      image={ic_forget}
+      onBackPress={onBackPress}
     >
       <ScrollView style={styles.flexStyle} showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View>
-            <Text style={styles.titleStyle}>{en.LOGIN}</Text>
-            <Text style={styles.paragraphStyle}>{en.PLEASE_LOGIN_TO_YOUR_ACCOUNT}</Text>
+            <Text style={styles.titleStyle}>{en.ACCOUNT_HELP}!</Text>
+            <Text style={styles.paragraphStyle}>{en.ACCOUNT_RECOVERY_OPTIONS}</Text>
+          </View>
+          <View style={styles.subHeadContainer}>
+            <Text style={[styles.paragraphStyle, styles.subHeading]}>{en.ENTER_YOUR_EMAIL_ADDRESS}</Text>
           </View>
           <View style={styles.formContainer}>
             <FloatingLabelTextField
@@ -42,24 +40,12 @@ const Login = (props) => {
               keyboardType={'email-address'}
               autoCapitalize={false}
             />
-            <FloatingLabelTextField
-              label={en.PASSWORD}
-              onChangeText={(value) => setEmail(value)}
-              value={email}
-              secureTextEntry={true}
-              ref={passwordRef}
-              autoCapitalize={false}
-            />
-          </View>
-          <View style={styles.linkContainer}>
-            <Link onPress={onForgotPasswordPress}>
-              {en.FORGOT_PASSWORD}?
-            </Link>
           </View>
           <View style={styles.buttonContainer}>
+            <Link onPress={onNeedHelpPress} linkStyle={styles.link}>{en.NEED_HELP}?</Link>
             <Button
-              label={en.LOGIN}
-              onPress={onLoginPress}
+              label={en.SUBMIT}
+              onPress={onSubmitPress}
               buttonStyle={styles.buttonStyle}
             />
           </View>
@@ -70,4 +56,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
