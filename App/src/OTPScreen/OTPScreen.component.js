@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import CustomLayout from '../widgets/CustomLayout';
 import { ic_otp } from '../../assets/images/ic_otp';
@@ -7,12 +7,14 @@ import OTPField from '../widgets/OTPField';
 
 const OTPScreen = () => {
 
+  const [otp, setOtp] = useState('');
+
   const onBackPress = () => {
 
   };
 
   const onChange = (value) => {
-    console.log('OTP', value);
+    setOtp(value);
   };
 
   return (
@@ -21,7 +23,7 @@ const OTPScreen = () => {
       onBackPress={onBackPress}
     >
       <View style={styles.flexStyle}>
-        <OTPField length={5} onChange={onChange} value={'12345'} />
+        <OTPField length={5} onChange={onChange} value={otp} />
       </View>
     </CustomLayout>
   );
