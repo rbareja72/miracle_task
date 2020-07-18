@@ -7,6 +7,7 @@ const colors = {
   textDarkGrey: 'rgb(80,80,80)',
   orange: 'rgb(240,114,81)',
   red: 'rgb(255,0,0)',
+  black: '#000',
 };
 
 export default colors;

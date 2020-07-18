@@ -19,44 +19,29 @@ const styles = StyleSheet.create({
     fontSize: normalize(12),
   },
   subHeading: {
-    fontWeight: '600',
-    color: colors.textGrey,
-    marginRight: normalScale(25),
+    color: colors.textDarkGrey,
   },
   formContainer: {
     marginTop: verticalScale(16),
   },
-  resendLink: {
-    fontWeight: '600',
-  },
-  resendLinkContainer: {
-    marginTop: verticalScale(20),
-  },
   link: {
     fontWeight: '800',
     color: colors.textDarkGrey,
-    paddingLeft: normalScale(10),
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginTop: verticalScale(100),
+    marginTop: verticalScale(60),
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   buttonStyle: {
     paddingVertical: verticalScale(6),
-    paddingHorizontal: normalScale(36),
+    paddingHorizontal: normalScale(26),
   },
   subHeadContainer: {
     marginTop: verticalScale(20),
   },
-  row: {
-    flexDirection: 'row',
-  },
-  emailText: {
-    color: colors.black,
-    fontSize: normalize(12),
-  }
+
 });
 
 export default styles;

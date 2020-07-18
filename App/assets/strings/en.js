@@ -9,6 +9,14 @@ const en = {
   ENTER_YOUR_EMAIL_ADDRESS: 'Enter your email address',
   NEED_HELP: 'Need Help',
   SUBMIT: 'Submit',
+  VERIFICATION: 'Verification',
+  A_VERIFICATION_CODE_SENT_TO: 'A verification code sent to',
+  DONT_RECEIVED_THE_CODE: 'Don\'t received the code',
+  RESEND: 'Resend',
+  VERIFY: 'Verfiy',
+  ENTER_NEW_PASSWORD: 'Enter New Password',
+  NEW_PASSWORD: 'New Password',
+  CONFIRM_PASSWORD: 'Confirm Password',
 };
 
 export default en;
