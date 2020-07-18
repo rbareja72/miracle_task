@@ -1,42 +1,74 @@
-import React, { useRef } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Keyboard } from 'react-native';
 import colors from '../../../assets/colors';
 import normalize, { moderateScale, verticalScale, normalScale } from './../../config/device/normalize';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const OTPField = ({ length, value, onChange }) => {
-  const refs = new Array(length).fill(useRef(null));
+const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, keyboardType }) => {
+  const refs = [];
+  for (let i = 0; i < length; i++) {
+    refs.push(useRef(null));
+  }
 
-  const onKeyPress = () => {
+  const [otp, setOtp] = useState(value);
 
+  useEffect(() => {
+    if (value !== otp) {
+      setOtp(value);
+    }
+  }, [otp, value]);
+
+  const onKeyPress = (event, ref, index) => {
+    if (event.nativeEvent.key === 'Backspace') {
+      if (index > 0) {
+        refs[index - 1].current.focus();
+      }
+    } else {
+      if (index < length - 1) {
+        refs[index + 1].current.focus();
+      }
+    }
   };
 
   const onChangeText = (value, ref, index) => {
-    let otp = '';
-    refs.forEach((ref) => {
-      console.log(ref);
-      otp += ref.value;
-    });
-    onChange(otp);
+    const left = otp.substr(0, index);
+    const right = otp.substr(index + 1);
+    const newOtp = left + value + right;
+    setOtp(newOtp);
+    onChange(newOtp);
+  };
+
+  const onFieldPress = () => {
+    if (otp.length === length) {
+      refs[otp.length - 1].current.focus();
+    } else {
+      refs[otp.length].current.focus();
+    }
   };
 
   return (
-    <View style={styles.row}>
-      {
-        refs.map((ref, index) => {
-          return (
-            <TextInput
-              key={'' + index}
-              ref={ref}
-              style={styles.textInput}
-              maxLength={1}
-              value={value[index]}
-              onKeyPress={(event) => onKeyPress(event, ref, index)}
-              onChangeText={(value) => onChangeText(value, ref, index)}
-            />
-          );
-        })
-      }
-    </View>
+    <TouchableWithoutFeedback onPress={onFieldPress}>
+      <View style={[styles.row, containerStyle]}>
+        {
+          refs.map((ref, index) => {
+            return (
+              <TextInput
+                key={'' + index}
+                ref={ref}
+                style={[styles.textInput, textFieldStyle]}
+                maxLength={1}
+                value={otp[index]}
+                onKeyPress={(event) => onKeyPress(event, ref, index)}
+                onChangeText={(value) => onChangeText(value, ref, index)}
+                onSubmitEditing={() => { }}
+                keyboardType={keyboardType || 'number-pad'}
+                pointerEvents={'none'}
+              />
+            );
+          })
+        }
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
