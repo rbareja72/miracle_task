@@ -21,6 +21,12 @@ const en = {
   PASSWORD_MUST_BE_BETWEEN: 'Password must be between 8 and 32 characters',
   INVALID_EMAIL: 'Invalid email',
   INVALID_CRED: 'Invalid Credentials',
+  ERROR_SAVING_PASSWORD: 'Error saving password',
+  SUCCESSFULLY_CHANGED: 'SUCCESSFULLY_CHANGED',
+  OTP_MATCHED: 'OTP matched',
+  OTP_DOES_NOT_MATCH: 'OTP does not match',
+  OTP_SENT: 'OTP Sent',
+  EMAIL_DOES_NOT_EXIST: 'Email does not exist',
 };
 
 export default en;

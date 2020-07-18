@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, ScrollView, Platform } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, Text, ScrollView, Platform, Alert } from 'react-native';
 import CustomLayout from './../widgets/CustomLayout';
 import { ic_forget } from '../../assets/images/ic_forget';
 import styles from './ForgotPassword.styles';
@@ -8,14 +8,47 @@ import FloatingLabelTextField from '../widgets/FloatingLabelTextField';
 import Button from '../widgets/Button';
 import Link from '../widgets/Link';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { Spinner } from '../widgets/Spinner';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as forgotPasswordActions from './ducks/ForgotPassword.actions';
+import { validateEmail } from './../utils/helperFunctions';
 
 const ForgotPassword = (props) => {
 
   const emailRef = useRef(null);
-  const [email, setEmail] = useState('name');
-  const onSubmitPress = () => props.navigation.navigate('OTPScreen');
   const onBackPress = () => props.navigation.navigate('Login');
   const onNeedHelpPress = () => null;
+  const onEmailChange = (value) => props.actions.updateValue('email', value);
+
+  const {
+    email,
+    loading,
+    sendOTPApiState,
+  } = props.forgotPasswordState;
+
+  const onSubmitPress = () => {
+    const isEmailValid = validateEmail(email.value);
+    if (isEmailValid) {
+      props.actions.sendOTP(email.value);
+    } else {
+      props.actions.setError('email', en.INVALID_EMAIL);
+    }
+  };
+
+  const {
+    clearSendOTPApiState,
+  } = props.actions;
+
+  useEffect(() => {
+    if (sendOTPApiState.isSuccess) {
+      clearSendOTPApiState();
+      props.navigation.navigate('OTPScreen');
+    } else if (sendOTPApiState.isError) {
+      Alert.alert(sendOTPApiState.message);
+      clearSendOTPApiState();
+    }
+  }, [sendOTPApiState, clearSendOTPApiState, props.navigation]);
 
   return (
     <CustomLayout
@@ -34,11 +67,13 @@ const ForgotPassword = (props) => {
           <View style={styles.formContainer}>
             <FloatingLabelTextField
               label={en.EMAIL_ADDRESS}
-              onChangeText={(value) => setEmail(value)}
-              value={email}
+              onChangeText={onEmailChange}
+              value={email.value}
               ref={emailRef}
               keyboardType={'email-address'}
               autoCapitalize={false}
+              error={email.error}
+              onSubmitEditing={onSubmitPress}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -51,9 +86,18 @@ const ForgotPassword = (props) => {
           </View>
         </View>
       </ScrollView>
+      {loading && <Spinner />}
       {Platform.OS === 'ios' ? <KeyboardSpacer topSpacing={-40} /> : null}
     </CustomLayout>
   );
 };
 
-export default ForgotPassword;
+const mapStateToProps = ({ ForgotPasswordReducer }) => ({
+  forgotPasswordState: ForgotPasswordReducer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ ...forgotPasswordActions }, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);
