@@ -71,7 +71,7 @@ const ForgotPassword = (props) => {
               value={email.value}
               ref={emailRef}
               keyboardType={'email-address'}
-              autoCapitalize={false}
+              autoCapitalize={'none'}
               error={email.error}
               onSubmitEditing={onSubmitPress}
             />

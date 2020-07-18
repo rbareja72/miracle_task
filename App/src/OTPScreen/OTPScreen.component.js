@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, Platform } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, ScrollView, Platform, Alert } from 'react-native';
 import CustomLayout from '../widgets/CustomLayout';
 import { ic_otp } from '../../assets/images/ic_otp';
 import styles from './OTPScreen.styles';
@@ -8,10 +8,32 @@ import Button from '../widgets/Button';
 import Link from '../widgets/Link';
 import en from './../../assets/strings/en';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as forgotPasswordActions from '../ForgotPassword/ducks/ForgotPassword.actions';
+import { Spinner } from '../widgets/Spinner';
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
+const OTP_LENGTH = 5;
 
 const OTPScreen = (props) => {
-
-  const [otp, setOtp] = useState('');
+  const { otp, email, timer, loading, matchOtpApiState } = props.forgotPasswordState;
+  const { clearMatchOTPState, updateValue } = props.actions;
 
   const onBackPress = () => {
     props.navigation.goBack();
@@ -19,13 +41,33 @@ const OTPScreen = (props) => {
 
   const onNeedHelpPress = () => null;
 
-  const onChange = (value) => {
-    setOtp(value);
-  };
+  const onChange = (value) => updateValue('otp', value);
 
   const onSubmitPress = () => {
-    props.navigation.replace('ResetPassword');
+    if (otp.value.length === OTP_LENGTH) {
+      props.actions.matchOtpAction(otp.value);
+    } else {
+      props.actions.setError('otp', en.PLEASE_ENTER_COMPLETE_OTP);
+    }
   };
+
+  const onResendPress = () => {
+    props.actions.sendOTP(email.value);
+  };
+
+  useEffect(() => {
+    if (matchOtpApiState.isSuccess) {
+      clearMatchOTPState();
+      props.navigation.navigate('ResetPassword');
+    } else if (matchOtpApiState.isError) {
+      clearMatchOTPState();
+      Alert.alert(matchOtpApiState.message);
+    }
+  }, [matchOtpApiState, clearMatchOTPState, props.navigation]);
+
+  useInterval(() => {
+    updateValue('timer', timer.value - 1);
+  }, 1000);
 
   return (
     <CustomLayout
@@ -38,15 +80,15 @@ const OTPScreen = (props) => {
             <Text style={styles.titleStyle}>{en.VERIFICATION}</Text>
             <View style={styles.row}>
               <Text style={styles.paragraphStyle}>{en.A_VERIFICATION_CODE_SENT_TO}{' '}</Text>
-              <Text style={styles.emailText}>{'email'}</Text>
+              <Text style={styles.emailText}>{email.value}</Text>
             </View>
           </View>
           <View style={styles.formContainer}>
-            <OTPField length={5} onChange={onChange} value={otp} />
+            <OTPField length={OTP_LENGTH} onChange={onChange} value={otp.value} error={otp.error} />
           </View>
           <View style={[styles.resendLinkContainer, styles.row]}>
             <Text style={styles.subHeading}>{en.DONT_RECEIVED_THE_CODE}?</Text>
-            <Link onPress={onNeedHelpPress} linkStyle={styles.resendLink}>(32){en.RESEND}</Link>
+            <Link onPress={onResendPress} linkStyle={styles.resendLink} disabled={timer.value > -1}>{timer.value > -1 ? `(${timer.value})` : '(0)'}{en.RESEND}</Link>
           </View>
           <View style={styles.buttonContainer}>
             <Link onPress={onNeedHelpPress} linkStyle={styles.link}>{en.NEED_HELP}?</Link>
@@ -58,9 +100,18 @@ const OTPScreen = (props) => {
           </View>
         </View>
       </ScrollView>
+      {loading && <Spinner />}
       {Platform.OS === 'ios' ? <KeyboardSpacer topSpacing={-40} /> : null}
     </CustomLayout>
   );
 };
 
-export default OTPScreen;
+const mapStateToProps = ({ ForgotPasswordReducer }) => ({
+  forgotPasswordState: ForgotPasswordReducer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ ...forgotPasswordActions }, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OTPScreen);

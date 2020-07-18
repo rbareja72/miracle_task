@@ -22,6 +22,10 @@ const INITIAL_STATE = {
     value: '',
     error: '',
   },
+  timer: {
+    value: 60,
+    error: '',
+  },
   matchOtpApiState: {
     ...DEFAULT_API_STATE,
   },
@@ -32,6 +36,7 @@ const INITIAL_STATE = {
     ...DEFAULT_API_STATE,
   },
   loading: false,
+  
 };
 
 function ForgotPasswordReducer(state = INITIAL_STATE, action) {
@@ -122,6 +127,10 @@ function ForgotPasswordReducer(state = INITIAL_STATE, action) {
           ...state.sendOTPApiState,
           isSuccess: true,
           message: action.payload.message,
+        },
+        timer: {
+          value: 60,
+          error: 0,
         },
         loading: false,
       };

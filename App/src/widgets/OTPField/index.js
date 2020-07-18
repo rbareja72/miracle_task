@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Pressable, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable, Platform, Text } from 'react-native';
 import colors from '../../../assets/colors';
 import normalize, { moderateScale } from './../../config/device/normalize';
 
-const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle }) => {
+const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle, error }) => {
   const refs = [];
   for (let i = 0; i < length; i++) {
     refs.push(useRef(null));
@@ -49,28 +49,32 @@ const OTPField = ({ length, value, onChange, textFieldStyle, containerStyle }) =
   };
 
   return (
-    <Pressable onPress={onFieldPress}>
-      <View style={[styles.row, containerStyle]}>
-        {
-          refs.map((ref, index) => {
-            return (
-              <View pointerEvents={'none'} key={'' + index}>
-                <TextInput
-                  ref={ref}
-                  style={[styles.textInput, textFieldStyle]}
-                  maxLength={1}
-                  value={otp[index]}
-                  onKeyPress={(event) => onKeyPress(event, index)}
-                  onChangeText={(value) => onChangeText(value, index)}
-                  onSubmitEditing={() => { }}
-                  keyboardType={'number-pad'}
-                />
-              </View>
-            );
-          })
-        }
-      </View>
-    </Pressable>
+    <View>
+      <Pressable onPress={onFieldPress}>
+        <View style={[styles.row, containerStyle]}>
+          {
+            refs.map((ref, index) => {
+              return (
+                <View pointerEvents={'none'} key={'' + index}>
+                  <TextInput
+                    ref={ref}
+                    style={[styles.textInput, textFieldStyle]}
+                    maxLength={1}
+                    value={otp[index]}
+                    onKeyPress={(event) => onKeyPress(event, index)}
+                    onChangeText={(value) => onChangeText(value, index)}
+                    onSubmitEditing={() => { }}
+                    keyboardType={'number-pad'}
+                  />
+                </View>
+              );
+            })
+          }
+
+        </View>
+      </Pressable>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+    </View>
   );
 };
 
@@ -89,6 +93,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: normalize(14),
     fontWeight: 'bold',
+  },
+  error: {
+    color: colors.red,
   },
 });
 

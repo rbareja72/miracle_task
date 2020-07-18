@@ -1,25 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, ScrollView, Platform } from 'react-native';
+import { View, Text, ScrollView, Platform, Alert } from 'react-native';
 import CustomLayout from './../widgets/CustomLayout';
-import { ic_forget } from '../../assets/images/ic_forget';
+import { ic_confirm } from '../../assets/images/ic_confirm';
 import styles from './ResetPassword.styles';
 import en from '../../assets/strings/en';
 import FloatingLabelTextField from '../widgets/FloatingLabelTextField';
 import Button from '../widgets/Button';
 import Link from '../widgets/Link';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
-const ForgotPassword = (props) => {
-
-  const passwordRef = useRef(null);
-  const [email, setEmail] = useState('name');
-  const onSubmitPress = () => {};
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as forgotPasswordActions from '../ForgotPassword/ducks/ForgotPassword.actions';
+import { Spinner } from '../widgets/Spinner';
+import { validatePassword } from './../utils/helperFunctions';
+const ResetPassword = (props) => {
+  const { newPassword, confirmPassword, loading, updatePasswordApiState } = props.forgotPasswordState;
+  const { clearSetNewPasswordState, updatePasswordAction, updateValue, setError } = props.actions;
+  const newPasswordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
   const onBackPress = () => props.navigation.goBack();
   const onNeedHelpPress = () => null;
 
+  const onNewPasswordChange = (value) => updateValue('newPassword', value);
+  const onConfirmPasswordChange = (value) => updateValue('confirmPassword', value);
+  const onNewPasswordSubmit = () => confirmPasswordRef.current.focus();
+
+  const onSubmitPress = () => {
+    const isNewPasswordValid = validatePassword(newPassword.value);
+    const isConfirmPasswordValid = validatePassword(confirmPassword.value);
+    if (isNewPasswordValid && isConfirmPasswordValid && newPassword.value === confirmPassword.value) {
+      updatePasswordAction(newPassword.value);
+      return;
+    }
+    if (!isNewPasswordValid) {
+      setError('newPassword', en.PASSWORD_MUST_BE_BETWEEN);
+    } else {
+      setError('confirmPassword', en.PASSWORDS_DO_NO_MATCH);
+    }
+  };
+
+  useEffect(() => {
+    if (updatePasswordApiState.isSuccess) {
+      clearSetNewPasswordState();
+      props.navigation.popToTop();
+    } else if (updatePasswordApiState.isError) {
+      Alert.alert(updatePasswordApiState.message);
+      clearSetNewPasswordState();
+    }
+  }, [updatePasswordApiState, clearSetNewPasswordState, props.navigation]);
+
   return (
     <CustomLayout
-      image={ic_forget}
+      image={ic_confirm}
       onBackPress={onBackPress}
     >
       <ScrollView style={styles.flexStyle} showsVerticalScrollIndicator={false}>
@@ -34,19 +66,23 @@ const ForgotPassword = (props) => {
           <View style={styles.formContainer}>
             <FloatingLabelTextField
               label={en.NEW_PASSWORD}
-              onChangeText={(value) => setEmail(value)}
-              value={email}
+              onChangeText={onNewPasswordChange}
+              value={newPassword.value}
+              error={newPassword.error}
               secureTextEntry={true}
-              ref={passwordRef}
-              autoCapitalize={false}
+              ref={newPasswordRef}
+              autoCapitalize={'none'}
+              onSubmitEditing={onNewPasswordSubmit}
             />
             <FloatingLabelTextField
               label={en.CONFIRM_PASSWORD}
-              onChangeText={(value) => setEmail(value)}
-              value={email}
+              onChangeText={onConfirmPasswordChange}
+              value={confirmPassword.value}
+              error={confirmPassword.error}
               secureTextEntry={true}
-              ref={passwordRef}
-              autoCapitalize={false}
+              ref={confirmPasswordRef}
+              autoCapitalize={'none'}
+              onSubmitEditing={onSubmitPress}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -59,9 +95,18 @@ const ForgotPassword = (props) => {
           </View>
         </View>
       </ScrollView>
+      {loading && <Spinner />}
       {Platform.OS === 'ios' ? <KeyboardSpacer topSpacing={-40} /> : null}
     </CustomLayout>
   );
 };
 
-export default ForgotPassword;
+const mapStateToProps = ({ ForgotPasswordReducer }) => ({
+  forgotPasswordState: ForgotPasswordReducer,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ ...forgotPasswordActions }, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPassword);

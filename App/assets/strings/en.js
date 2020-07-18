@@ -27,6 +27,8 @@ const en = {
   OTP_DOES_NOT_MATCH: 'OTP does not match',
   OTP_SENT: 'OTP Sent',
   EMAIL_DOES_NOT_EXIST: 'Email does not exist',
+  PLEASE_ENTER_COMPLETE_OTP: 'Please enter complete OTP',
+  PASSWORDS_DO_NO_MATCH: 'Passwords do not match',
 };
 
 export default en;

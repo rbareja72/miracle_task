@@ -9,6 +9,7 @@ const CustomLayout = ({ image, showBackButton = true, onBackPress, children }) =
     <View style={styles.flexStyle}>
       <StatusBar
         barStyle="light-content"
+        translucent={true}
       />
       <ImageBackground source={image} style={styles.backgroundImage} resizeMode={'stretch'}>
         {
