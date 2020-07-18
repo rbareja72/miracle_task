@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import { View, TextInput, Text, StyleSheet, Platform, UIManager, Animated, Easing } from 'react-native';
 import normalize, { verticalScale } from '../../config/device/normalize';
 import colors from '../../../assets/colors';
@@ -11,6 +11,10 @@ if (Platform.OS === 'android') {
 const FloatingLabelTextField = forwardRef(({ label, value, onChangeText, secureTextEntry, textFieldStyle, labelStyle, error, ...props }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const animatedValue = new Animated.Value(value || isFocused ? 0 : 1);
+  const inputRef = useRef(null);
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current.focus(),
+  }));
 
   const onFocus = () => {
     if (!value) {
@@ -48,20 +52,19 @@ const FloatingLabelTextField = forwardRef(({ label, value, onChangeText, secureT
     ],
   });
 
-  const maskValue = (string) => new Array(string.length).fill('*').join('');
-
   return (
     <View style={styles.container}>
       <Animated.View style={[{ transform: [{ scale }, { translateY }], position: 'absolute', left: 0 }]}>
         <Text style={[styles.placeholderStyle, labelStyle]}>{label}</Text>
       </Animated.View>
       <TextInput
-        ref={ref}
-        value={secureTextEntry ? maskValue(value) : value}
+        ref={inputRef}
+        value={value}
         onBlur={onBlur}
         onFocus={onFocus}
         style={[styles.textField, textFieldStyle, secureTextEntry ? styles.letterSpacing : null]}
         onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
         {...props}
       />
       {
