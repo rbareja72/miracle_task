@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import Router from './src/config/routes';
 import store from './src/config/store';
 import { getData, storeData } from './src/utils/dataUtil';
-import { DEFAULT_EMAIL, DEFAULT_PASSWORD } from './src/config/constants';
+import { DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_OTP } from './src/config/constants';
 
 const App = () => {
 
@@ -22,6 +22,7 @@ const App = () => {
     if (!(storedEmail && storedPassword)) {
       storeData('email', DEFAULT_EMAIL);
       storeData('password', DEFAULT_PASSWORD);
+      storeData('otp', DEFAULT_OTP);
     }
   };
 
