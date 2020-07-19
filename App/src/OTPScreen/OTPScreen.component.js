@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { View, Text, ScrollView, Platform, Alert } from 'react-native';
 import CustomLayout from '../widgets/CustomLayout';
 import { ic_otp } from '../../assets/images/ic_otp';
@@ -12,22 +12,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as forgotPasswordActions from '../ForgotPassword/ducks/ForgotPassword.actions';
 import { Spinner } from '../widgets/Spinner';
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
 
 const OTP_LENGTH = 5;
 
@@ -65,9 +49,26 @@ const OTPScreen = (props) => {
     }
   }, [matchOtpApiState, clearMatchOTPState, props.navigation]);
 
-  useInterval(() => {
+
+  /**
+   * segment responsible for timer call back
+   */
+  // begins here.
+  const reduceTimer = useCallback(() => {
     updateValue('timer', timer.value - 1);
-  }, 1000);
+  }, [timer.value, updateValue]);
+
+  const timerFunction = useRef(reduceTimer);
+
+  useEffect(() => {
+    timerFunction.current = reduceTimer;
+  }, [reduceTimer]);
+
+  useEffect(() => {
+    const interval = setInterval(timerFunction.current, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  // ends here.
 
   return (
     <CustomLayout
