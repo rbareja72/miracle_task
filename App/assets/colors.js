@@ -8,6 +8,7 @@ const colors = {
   orange: 'rgb(240,114,81)',
   red: 'rgb(255,0,0)',
   black: '#000',
+  transparent: 'rgba(0,0,0,0)',
 };
 
 export default colors;

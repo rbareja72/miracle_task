@@ -16,7 +16,7 @@ const App = () => {
    * this function checks if email & password exists,
    * if not then set default in the storage.
    */
-  const setDefaultData =  async () => {
+  const setDefaultData = async () => {
     const storedEmail = await getData('email');
     const storedPassword = await getData('password');
     if (!(storedEmail && storedPassword)) {
