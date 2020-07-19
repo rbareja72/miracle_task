@@ -30,12 +30,17 @@ const login = (email, password) => dispatch => {
 };
 
 const clearLoginApiState = () => ({
+  type: actionTypes.LOGIN_CLEAR_API_STATE,
+});
+
+const clearState = () => ({
   type: actionTypes.LOGIN_CLEAR_STATE,
 });
 
 export {
-  updateLoginValue,
-  loginSetError,
   login,
+  clearState,
+  loginSetError,
+  updateLoginValue,
   clearLoginApiState,
 };

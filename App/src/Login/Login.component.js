@@ -41,6 +41,7 @@ const Login = (props) => {
   };
 
   const onForgotPasswordPress = () => {
+    props.actions.clearState();
     props.navigation.navigate('ForgotPassword');
   };
 

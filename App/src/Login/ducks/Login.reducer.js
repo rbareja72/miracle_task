@@ -61,13 +61,25 @@ function LoginReducer(state = INITIAL_STATE, action) {
           message: action.payload.message,
         },
       };
-    case actionTypes.LOGIN_CLEAR_STATE:
+    case actionTypes.LOGIN_CLEAR_API_STATE:
       return {
         ...state,
         loginApiState: {
           isSuccess: false,
           isError: false,
           message: '',
+        },
+      };
+    case actionTypes.LOGIN_CLEAR_STATE:
+      return {
+        ...INITIAL_STATE,
+        email: {
+          value: '',
+          error: '',
+        },
+        password: {
+          value: '',
+          error: '',
         },
       };
     default:
