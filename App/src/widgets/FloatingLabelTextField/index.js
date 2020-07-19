@@ -48,7 +48,7 @@ const FloatingLabelTextField = forwardRef(({ label, value, onChangeText, secureT
     inputRange: [0, 1],
     outputRange: [
       -verticalScale(20),
-      verticalScale(Platform.OS === 'android' ? -5 : 5),
+      verticalScale(Platform.OS === 'android' ? -5 : 0),
     ],
   });
 
