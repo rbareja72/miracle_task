@@ -14,16 +14,31 @@ import * as forgotPasswordActions from '../ForgotPassword/ducks/ForgotPassword.a
 import { Spinner } from '../widgets/Spinner';
 import { validatePassword } from './../utils/helperFunctions';
 const ResetPassword = (props) => {
-  const { newPassword, confirmPassword, loading, updatePasswordApiState } = props.forgotPasswordState;
-  const { clearSetNewPasswordState, updatePasswordAction, updateValue, setError } = props.actions;
+  const {
+    loading,
+    newPassword,
+    confirmPassword,
+    updatePasswordApiState,
+  } = props.forgotPasswordState;
+  const {
+    setError,
+    clearState,
+    updateValue,
+    updatePasswordAction,
+    clearResetPasswordState,
+    clearSetNewPasswordState,
+  } = props.actions;
   const newPasswordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
-  const onBackPress = () => props.navigation.goBack();
   const onNeedHelpPress = () => null;
-
   const onNewPasswordChange = (value) => updateValue('newPassword', value);
   const onConfirmPasswordChange = (value) => updateValue('confirmPassword', value);
   const onNewPasswordSubmit = () => confirmPasswordRef.current.focus();
+
+  const onBackPress = () => {
+    props.navigation.goBack();
+    clearResetPasswordState();
+  };
 
   const onSubmitPress = () => {
     const isNewPasswordValid = validatePassword(newPassword.value);
@@ -42,12 +57,13 @@ const ResetPassword = (props) => {
   useEffect(() => {
     if (updatePasswordApiState.isSuccess) {
       clearSetNewPasswordState();
+      clearState();
       props.navigation.popToTop();
     } else if (updatePasswordApiState.isError) {
       Alert.alert(updatePasswordApiState.message);
       clearSetNewPasswordState();
     }
-  }, [updatePasswordApiState, clearSetNewPasswordState, props.navigation]);
+  }, [updatePasswordApiState, clearSetNewPasswordState, props.navigation, clearState]);
 
   return (
     <CustomLayout

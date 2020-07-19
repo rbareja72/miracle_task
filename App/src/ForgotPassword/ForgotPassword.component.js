@@ -17,7 +17,6 @@ import { validateEmail } from './../utils/helperFunctions';
 const ForgotPassword = (props) => {
 
   const emailRef = useRef(null);
-  const onBackPress = () => props.navigation.navigate('Login');
   const onNeedHelpPress = () => null;
   const onEmailChange = (value) => props.actions.updateValue('email', value);
 
@@ -27,18 +26,26 @@ const ForgotPassword = (props) => {
     sendOTPApiState,
   } = props.forgotPasswordState;
 
+  const {
+    sendOTP,
+    setError,
+    clearState,
+    clearSendOTPApiState,
+  } = props.actions;
+
+  const onBackPress = () => {
+    props.navigation.goBack();
+    clearState();
+  };
+
   const onSubmitPress = () => {
     const isEmailValid = validateEmail(email.value);
     if (isEmailValid) {
-      props.actions.sendOTP(email.value);
+      sendOTP(email.value);
     } else {
-      props.actions.setError('email', en.INVALID_EMAIL);
+      setError('email', en.INVALID_EMAIL);
     }
   };
-
-  const {
-    clearSendOTPApiState,
-  } = props.actions;
 
   useEffect(() => {
     if (sendOTPApiState.isSuccess) {
@@ -48,7 +55,7 @@ const ForgotPassword = (props) => {
       Alert.alert(sendOTPApiState.message);
       clearSendOTPApiState();
     }
-  }, [sendOTPApiState, clearSendOTPApiState, props.navigation]);
+  }, [sendOTPApiState, clearSendOTPApiState, props.navigation, clearState]);
 
   return (
     <CustomLayout

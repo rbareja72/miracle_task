@@ -36,7 +36,6 @@ const INITIAL_STATE = {
     ...DEFAULT_API_STATE,
   },
   loading: false,
-  
 };
 
 function ForgotPasswordReducer(state = INITIAL_STATE, action) {
@@ -149,6 +148,54 @@ function ForgotPasswordReducer(state = INITIAL_STATE, action) {
         ...state,
         sendOTPApiState: {
           ...DEFAULT_API_STATE,
+        },
+      };
+    case actionTypes.FP_CLEAR_STATE:
+      return {
+        ...INITIAL_STATE,
+        email: {
+          value: '',
+          error: '',
+        },
+        otp: {
+          value: '',
+          error: '',
+        },
+        newPassword: {
+          value: '',
+          error: '',
+        },
+        confirmPassword: {
+          value: '',
+          error: '',
+        },
+        timer: {
+          value: 60,
+          error: '',
+        },
+      };
+    case actionTypes.FP_CLEAR_OTP_STATE:
+      return {
+        ...state,
+        otp: {
+          value: '',
+          error: '',
+        },
+        timer: {
+          value: 60,
+          error: '',
+        },
+      };
+    case actionTypes.FP_CLEAR_RESET_PASSWORD_STATE:
+      return {
+        ...state,
+        newPassword: {
+          value: '',
+          error: '',
+        },
+        confirmPassword: {
+          value: '',
+          error: '',
         },
       };
     default:

@@ -50,6 +50,18 @@ const clearSendOTPApiState = () => ({
   type: actionTypes.FP_SEND_OTP_CLEAR_API_STATE,
 });
 
+const clearState = () => ({
+  type: actionTypes.FP_CLEAR_STATE,
+});
+
+const clearOTPState = () => ({
+  type: actionTypes.FP_CLEAR_OTP_STATE,
+});
+
+const clearResetPasswordState = () => ({
+  type: actionTypes.FP_CLEAR_RESET_PASSWORD_STATE,
+});
+
 export {
   updateValue,
   setError,
@@ -59,4 +71,7 @@ export {
   clearSetNewPasswordState,
   clearSendOTPApiState,
   sendOTP,
+  clearState,
+  clearOTPState,
+  clearResetPasswordState,
 };

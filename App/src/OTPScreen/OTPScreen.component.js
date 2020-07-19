@@ -15,12 +15,36 @@ import { Spinner } from '../widgets/Spinner';
 
 const OTP_LENGTH = 5;
 
+const useInterval = (callback, delay) => {
+  const savedCallback = useRef();
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+};
+
 const OTPScreen = (props) => {
   const { otp, email, timer, loading, matchOtpApiState } = props.forgotPasswordState;
-  const { clearMatchOTPState, updateValue } = props.actions;
+  const {
+    clearMatchOTPState,
+    updateValue,
+    clearOTPState,
+    matchOtpAction,
+    setError,
+    sendOTP,
+  } = props.actions;
 
   const onBackPress = () => {
     props.navigation.goBack();
+    clearOTPState();
   };
 
   const onNeedHelpPress = () => null;
@@ -29,45 +53,34 @@ const OTPScreen = (props) => {
 
   const onSubmitPress = () => {
     if (otp.value.length === OTP_LENGTH) {
-      props.actions.matchOtpAction(otp.value);
+      matchOtpAction(otp.value);
     } else {
-      props.actions.setError('otp', en.PLEASE_ENTER_COMPLETE_OTP);
+      setError('otp', en.PLEASE_ENTER_COMPLETE_OTP);
     }
   };
 
   const onResendPress = () => {
-    props.actions.sendOTP(email.value);
+    sendOTP(email.value);
   };
 
   useEffect(() => {
     if (matchOtpApiState.isSuccess) {
       clearMatchOTPState();
-      props.navigation.navigate('ResetPassword');
+      clearOTPState();
+      props.navigation.replace('ResetPassword');
     } else if (matchOtpApiState.isError) {
       clearMatchOTPState();
       Alert.alert(matchOtpApiState.message);
     }
-  }, [matchOtpApiState, clearMatchOTPState, props.navigation]);
+  }, [matchOtpApiState, clearMatchOTPState, props.navigation, clearOTPState]);
 
 
   /**
    * segment responsible for timer call back
    */
   // begins here.
-  const reduceTimer = useCallback(() => {
-    updateValue('timer', timer.value - 1);
-  }, [timer.value, updateValue]);
-
-  const timerFunction = useRef(reduceTimer);
-
-  useEffect(() => {
-    timerFunction.current = reduceTimer;
-  }, [reduceTimer]);
-
-  useEffect(() => {
-    const interval = setInterval(timerFunction.current, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const reduceTimer = () => updateValue('timer', timer.value - 1);
+  useInterval(reduceTimer, 1000);
   // ends here.
 
   return (
