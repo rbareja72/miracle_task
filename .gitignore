@@ -57,3 +57,7 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+miracle_task.app.dSYM.zip
+
+Fastfile
