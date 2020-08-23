@@ -1,0 +1,22 @@
+platform :ios do
+  lane :build do
+  cocoapods(podfile: "./ios/Podfile")
+  gym(
+    scheme: 'miracle_task',
+    clean: true, 
+    workspace: './ios/miracle_task.xcworkspace', 
+    export_method: 'development', 
+    output_directory: './builds'
+  )
+end
+lane :beta do
+  #build
+  appcenter_upload(
+    api_token: ENV["APPCENTER_API_TOKEN"],
+    owner_name: ENV["APPCENTER_OWNER_NAME"],
+    owner_type: ENV["APPCENTER_OWNER_TYPE"],
+    app_name: ENV["APPCENTER_APP_NAME_IOS"],
+    ipa: ENV["IPA_PATH"]
+  )
+end
+end
