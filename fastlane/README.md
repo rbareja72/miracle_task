@@ -16,11 +16,6 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
-### ios bump_build_version
-```
-fastlane ios bump_build_version
-```
-
 ### ios build
 ```
 fastlane ios build

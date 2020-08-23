@@ -60,4 +60,4 @@ buck-out/
 
 miracle_task.app.dSYM.zip
 
-Fastfile
+.env

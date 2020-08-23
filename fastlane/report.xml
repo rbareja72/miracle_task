@@ -5,12 +5,7 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying fastlane version" time="0.00094">
-        
-      </testcase>
-    
-      
-      <testcase classname="fastlane.lanes" name="1: appcenter_upload" time="467.484433">
+      <testcase classname="fastlane.lanes" name="0: appcenter_upload" time="74.211021">
         
       </testcase>
     
