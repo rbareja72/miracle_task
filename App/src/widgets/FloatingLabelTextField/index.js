@@ -10,7 +10,7 @@ if (Platform.OS === 'android') {
 }
 const FloatingLabelTextField = forwardRef(({ label, value, onChangeText, secureTextEntry, textFieldStyle, labelStyle, error, ...props }, ref) => {
   const [isFocused, setIsFocused] = useState(false);
-  const animatedValue = new Animated.Value(value || isFocused ? 0 : 1);
+  const animatedValue = useRef(new Animated.Value(value || isFocused ? 0 : 1));
   const inputRef = useRef(null);
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current.focus(),
